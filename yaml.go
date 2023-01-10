@@ -413,6 +413,7 @@ type Node struct {
 	// These fields are not respected when encoding the node.
 	Line   int
 	Column int
+	visited bool
 }
 
 // IsZero returns whether the node has all of its fields unset.

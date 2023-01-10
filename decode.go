@@ -404,6 +404,10 @@ func (d *decoder) callObsoleteUnmarshaler(n *Node, u obsoleteUnmarshaler) (good 
 //
 // If n holds a null value, prepare returns before doing anything.
 func (d *decoder) prepare(n *Node, out reflect.Value) (newout reflect.Value, unmarshaled, good bool) {
+	if n.visited {
+		return out, false, false
+	}
+	n.visited = true
 	if n.ShortTag() == nullTag {
 		return out, false, false
 	}
@@ -537,6 +541,7 @@ func (d *decoder) alias(n *Node, out reflect.Value) (good bool) {
 	}
 	d.aliases[n] = true
 	d.aliasDepth++
+	n.Alias.visited = false
 	good = d.unmarshal(n.Alias, out)
 	d.aliasDepth--
 	delete(d.aliases, n)
